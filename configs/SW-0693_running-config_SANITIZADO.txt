@@ -1,0 +1,106 @@
+! SW-0693 — Resumen reproducible sanitizado de la configuración validada
+! Práctica 3 / Infraestructura 1 / 2025-0693
+! Los secretos/hash de autenticación se omiten intencionalmente.
+service password-encryption
+hostname SW-0693
+ip dhcp snooping vlan 10,20
+ip dhcp snooping
+ip arp inspection vlan 10,20
+!
+vlan 10
+ name USUARIOS-1
+vlan 20
+ name USUARIOS-2
+vlan 30
+ name DMZ
+vlan 99
+ name NATIVE
+vlan 999
+ name PARKING
+!
+interface GigabitEthernet0/0
+ switchport mode access
+ switchport access vlan 999
+ shutdown
+!
+interface GigabitEthernet0/1
+ switchport trunk native vlan 99
+ switchport trunk allowed vlan 10,20,30
+ switchport mode trunk
+ switchport nonegotiate
+ ip dhcp snooping trust
+!
+interface GigabitEthernet0/2
+ switchport mode access
+ switchport access vlan 10
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet0/3
+ switchport mode access
+ switchport access vlan 20
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet1/0
+ switchport mode access
+ switchport access vlan 30
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet1/1
+ switchport mode access
+ switchport access vlan 30
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet1/2
+ switchport mode access
+ switchport access vlan 30
+ switchport nonegotiate
+ switchport port-security
+ switchport port-security maximum 1
+ switchport port-security violation shutdown
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+!
+interface GigabitEthernet1/3
+ switchport mode access
+ switchport access vlan 999
+ shutdown
+!
+interface Vlan20
+ ip address 10.6.93.140 255.255.255.128
+ no shutdown
+!
+ip default-gateway 10.6.93.129
+no ip http server
+no ip http secure-server
+ip ssh version 2
+!
+line vty 0 4
+ transport input ssh
+ login local
+!
+! Fin. Comparar con la evidencia/documentación para la validación final.
